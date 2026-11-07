@@ -1,0 +1,658 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Confiseur</title>
+<meta name="description" content="Le Confiseur · Pâtisserie &amp; Atelier. Torten und Cupcakes auf Bestellung.">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500&family=Prata&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  /* Layout idea: a pâtisserie menu read as cross-sections. Every product carries its own strata bar. */
+  --porcelain:#F6EFEA;   /* page */
+  --paper:#FBF8F5;       /* raised surfaces */
+  --plum:#36192B;        /* ink, from the wordmark */
+  --plum-soft:#6F5565;   /* secondary text */
+  --gold:#A8824C;        /* hairlines, the logo's ring */
+  --blush:#E9D7D6;       /* quiet fills */
+  --line:rgba(54,25,43,.14);
+  --display:"Prata","Didot","Bodoni 72",Georgia,serif;
+  --body:"Jost","Futura","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --ease:cubic-bezier(.22,.8,.18,1);
+  --gutter:clamp(16px,4vw,56px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--porcelain);color:var(--plum);font:400 17px/1.6 var(--body);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0}
+.wrap{max-width:1280px;margin:0 auto;padding:0 var(--gutter)}
+.caps{font:500 12px/1.2 var(--body);letter-spacing:.2em;text-transform:uppercase}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:16px;top:16px;z-index:50;background:var(--paper);padding:8px 12px}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--porcelain) 88%,transparent);backdrop-filter:saturate(1.2) blur(10px);-webkit-backdrop-filter:saturate(1.2) blur(10px);border-bottom:1px solid transparent;transition:border-color .4s}
+.top.scrolled{border-bottom-color:var(--line)}
+.top .wrap{display:flex;align-items:center;gap:32px;height:76px}
+.brand{display:block;flex:none}
+.brand img{height:44px;width:auto}
+.nav{display:flex;gap:28px;margin-left:auto}
+.nav a{text-decoration:none;font-size:15px;position:relative;padding:4px 0}
+.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold);transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+.nav a:hover::after{transform:scaleX(1);transform-origin:left}
+.langs{display:flex;gap:2px;font:500 12px/1 var(--body);letter-spacing:.12em}
+.langs button{background:none;border:0;padding:8px 6px;cursor:pointer;color:var(--plum-soft);position:relative}
+.langs button[aria-pressed="true"]{color:var(--plum)}
+.langs button[aria-pressed="true"]::after{content:"";position:absolute;left:6px;right:6px;bottom:3px;height:1px;background:var(--gold)}
+.langs button:hover{color:var(--plum)}
+
+/* ---------- hero ---------- */
+.hero{padding:clamp(40px,7vw,96px) 0 clamp(64px,9vw,128px)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:0 clamp(32px,6vw,96px);align-items:center}
+.hero-copy{display:flex;flex-direction:column;gap:28px;max-width:34rem}
+.hero-copy .caps{color:var(--gold)}
+.hero h1{font-size:clamp(50px,6.3vw,100px);line-height:.98;letter-spacing:-.015em}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.08em}
+.hero h1 .ln>span{display:block}
+.lead{font-size:clamp(17px,1.4vw,19px);color:var(--plum-soft);max-width:30rem;margin:0}
+.ctas{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:12px;background:var(--plum);color:var(--paper);border:0;padding:16px 26px;text-decoration:none;font-size:15px;letter-spacing:.02em;cursor:pointer;transition:background .3s}
+.btn:hover{background:#4c2540}
+.btn .arr{display:inline-block;transition:transform .4s var(--ease)}
+.btn:hover .arr{transform:translateX(4px)}
+.link{font-size:15px;text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
+.tally{font-size:14px;color:var(--plum-soft);font-variant-numeric:tabular-nums;margin:0}
+.hero-art{margin:0}
+.hero-art{max-width:460px;width:100%;justify-self:end}
+/* video sits a little transparent over a blush ground, with a plum veil on top */
+.arch{position:relative;border-radius:999px 999px 3px 3px;overflow:hidden;aspect-ratio:3/4;background:var(--blush);outline:1px solid var(--gold);outline-offset:12px}
+.arch video{display:block;width:100%;height:100%;object-fit:cover;opacity:.84}
+.arch::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(170deg,rgba(110,58,85,.22) 0%,rgba(233,215,214,0) 45%,rgba(54,25,43,.30) 100%);mix-blend-mode:multiply}
+.hero-art figcaption{margin-top:28px;font-size:13px;color:var(--plum-soft)}
+
+/* ---------- sections ---------- */
+section[id]{scroll-margin-top:90px}
+.sec{padding:clamp(56px,8vw,112px) 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px clamp(24px,5vw,80px);align-items:end;padding-bottom:36px;border-bottom:1px solid var(--line)}
+.sec-head h2{font-size:clamp(40px,5.2vw,76px);line-height:1}
+.sec-head h2 sup{font:500 13px/1 var(--body);letter-spacing:.1em;color:var(--gold);vertical-align:top;margin-left:10px;position:relative;top:.5em;font-variant-numeric:tabular-nums}
+.sec-head p{margin:0;color:var(--plum-soft);max-width:32rem}
+.filters{display:flex;flex-wrap:wrap;gap:6px 28px;padding:22px 0 0}
+.filters button{background:none;border:0;padding:6px 0;cursor:pointer;font-size:15px;color:var(--plum-soft);position:relative;transition:color .3s}
+.filters button sup{font-size:11px;margin-left:3px;font-variant-numeric:tabular-nums;color:var(--gold)}
+.filters button::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--plum);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.filters button[aria-pressed="true"]{color:var(--plum)}
+.filters button[aria-pressed="true"]::after{transform:scaleX(1)}
+
+.grid{list-style:none;margin:0;padding:48px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:64px clamp(20px,3vw,40px)}
+.card{position:relative;display:flex;flex-direction:column;gap:20px}
+.card[hidden]{display:none}
+@media (prefers-reduced-motion:no-preference){.card.enter{animation:enter .7s var(--ease) both}}
+@keyframes enter{from{opacity:0;transform:translateY(14px)}}
+/* photos sit on white; multiply lets the page colour show through so each slice stands on the page */
+.card-img{position:relative;aspect-ratio:1/1;overflow:hidden;margin:0;background:var(--porcelain)}
+.sec.small .card-img{background:var(--paper)}
+.card-img img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;transition:transform 1.4s var(--ease)}
+.card:hover .card-img img{transform:scale(1.045)}
+.card-body{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;align-items:baseline}
+.card-no{font-size:12px;letter-spacing:.08em;color:var(--gold);font-variant-numeric:tabular-nums}
+.card h3{font-size:clamp(22px,1.9vw,27px);line-height:1.15}
+.card-open{all:unset;cursor:pointer}
+.card-open::after{content:"";position:absolute;inset:0;z-index:1}
+.card-open:focus-visible{outline:none}
+.card:has(.card-open:focus-visible){outline:2px solid var(--gold);outline-offset:8px}
+.card .strata{grid-column:2;margin-top:10px}
+
+.strata{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;font-size:14px;line-height:1.35;color:var(--plum-soft)}
+.strata li{position:relative;padding:4px 0 4px 18px}
+.strata li::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--c);box-shadow:inset 0 0 0 .5px rgba(54,25,43,.18);transition:width .5s var(--ease)}
+.strata li:first-child::before{border-radius:2px 2px 0 0}
+.strata li:last-child::before{border-radius:0 0 2px 2px}
+.card:hover .strata li::before{width:7px}
+
+/* ---------- small formats ---------- */
+.sec.small{background:var(--paper)}
+
+/* ---------- order ---------- */
+.order{background:var(--plum);color:var(--porcelain)}
+.order .sec-head{border-bottom-color:rgba(246,239,234,.16)}
+.order .sec-head p{color:rgba(246,239,234,.72)}
+.order-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px clamp(32px,6vw,96px);padding-top:56px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:32px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:48px 1fr;gap:4px 0;counter-increment:s}
+.steps li::before{content:counter(s);grid-row:span 2;font-family:var(--display);font-size:30px;line-height:1;color:var(--gold)}
+.steps b{font-weight:500;font-size:18px}
+.steps span{color:rgba(246,239,234,.72);font-size:15px}
+.contacts{margin:48px 0 0;padding:28px 0 0;border-top:1px solid rgba(246,239,234,.16);display:grid;grid-template-columns:auto 1fr;gap:10px 24px;font-size:15px}
+.contacts dt{color:rgba(246,239,234,.6)}
+.contacts dd{margin:0}
+.contacts a{text-decoration:none;border-bottom:1px solid rgba(168,130,76,.6)}
+.contacts .addr{font-style:normal;line-height:1.5}
+.contacts .map{display:inline-block;margin-top:6px;font-size:13px;color:rgba(246,239,234,.72)}
+.foot-addr{text-decoration:none;color:var(--plum)}
+.foot-addr:hover{color:var(--gold)}
+form{display:grid;grid-template-columns:1fr 1fr;gap:28px 28px}
+.f{display:flex;flex-direction:column;gap:8px}
+.f.full{grid-column:1/-1}
+.f label{font:500 11px/1.2 var(--body);letter-spacing:.18em;text-transform:uppercase;color:rgba(246,239,234,.66)}
+.f input,.f select,.f textarea{background:transparent;border:0;border-bottom:1px solid rgba(246,239,234,.32);padding:10px 0;color:var(--porcelain);border-radius:0;transition:border-color .3s;min-width:0}
+.f select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 10px) 55%,calc(100% - 5px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:24px}
+.f select option,.f select optgroup{color:var(--plum);background:var(--paper)}
+.f input::placeholder,.f textarea::placeholder{color:rgba(246,239,234,.4)}
+.f input:focus,.f select:focus,.f textarea:focus{outline:none;border-bottom-color:var(--gold)}
+.f input[type=date]{color-scheme:dark}
+.f textarea{resize:vertical;min-height:88px}
+.send{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;padding-top:8px}
+.btn.light{background:var(--porcelain);color:var(--plum)}
+.btn.light:hover{background:#fff}
+.btn.ghost{background:transparent;color:var(--porcelain);box-shadow:inset 0 0 0 1px rgba(246,239,234,.4)}
+.btn.ghost:hover{box-shadow:inset 0 0 0 1px var(--gold)}
+.form-note{grid-column:1/-1;font-size:13px;color:rgba(246,239,234,.6);margin:0;min-height:1.4em}
+.form-note.err{color:#F1B9B4}
+
+/* ---------- footer ---------- */
+.foot{padding:56px 0 40px}
+.foot .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:24px 40px;align-items:center}
+.foot img{width:120px;height:auto}
+.foot p{margin:0;font-size:14px;color:var(--plum-soft)}
+
+/* ---------- dialog ---------- */
+dialog{border:0;padding:0;background:var(--paper);color:var(--plum);width:min(980px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}
+dialog::backdrop{background:rgba(40,16,31,.45);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+dialog[open]{animation:dlg .5s var(--ease)}
+@keyframes dlg{from{opacity:0;transform:translateY(16px) scale(.985)}}
+.dlg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.dlg figure{margin:0;background:var(--paper);display:grid;place-items:center}
+.dlg figure img{width:100%;height:auto;object-fit:contain;aspect-ratio:1/1;mix-blend-mode:multiply}
+.dlg-body{padding:clamp(28px,4vw,48px);display:flex;flex-direction:column;gap:20px}
+.dlg-body .caps{color:var(--gold)}
+.dlg-body h2{font-size:clamp(32px,3.6vw,46px);line-height:1.05;padding-right:32px}
+.dlg-body h4{margin:12px 0 0;font:500 11px/1.2 var(--body);letter-spacing:.18em;text-transform:uppercase;color:var(--plum-soft)}
+.strata.big{font-size:16px;color:var(--plum)}
+.strata.big li{padding:12px 0 12px 44px;border-bottom:1px solid var(--line)}
+.strata.big li:last-child{border-bottom:0}
+.strata.big li::before{width:26px}
+.dlg-body .btn{align-self:flex-start;margin-top:auto}
+.x{position:absolute;top:14px;right:14px;width:40px;height:40px;border:0;background:var(--paper);border-radius:50%;cursor:pointer;font-size:22px;line-height:1;display:grid;place-items:center;z-index:2}
+.x:hover{background:var(--blush)}
+
+/* ---------- motion ---------- */
+@media (prefers-reduced-motion:no-preference){
+  .hero h1 .ln>span{animation:rise 1.1s var(--ease) both;animation-delay:calc(.15s + var(--i,0) * .12s)}
+  .hero-copy>:not(h1){animation:fade 1s var(--ease) both;animation-delay:.6s}
+  .arch video{animation:cut 1.5s cubic-bezier(.7,0,.15,1) both .1s,settle 2.2s var(--ease) both .1s}
+  .arch{animation:fade 1.2s ease both .2s}
+  @supports (animation-timeline:view()){
+    .grid .card:not(.enter){animation:enter linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
+  }
+}
+@keyframes rise{from{transform:translateY(105%)}}
+@keyframes fade{from{opacity:0}}
+@keyframes cut{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes settle{from{transform:scale(1.12)}}
+
+/* ---------- responsive ---------- */
+@media (max-width:1100px){
+  .hero .wrap{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr)}
+}
+@media (max-width:980px){
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .order-grid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .nav{display:none}
+  .langs{margin-left:auto}
+  .top .wrap{height:64px;gap:12px}
+  .brand img{height:34px}
+  .hero .wrap{grid-template-columns:1fr;gap:56px}
+  .hero-art{max-width:420px;width:calc(100% - 24px);justify-self:center}
+  .arch{outline-offset:8px}
+  .sec-head{grid-template-columns:1fr}
+  .dlg{grid-template-columns:1fr}
+  .dlg figure img{max-width:420px;margin:0 auto}
+  .foot .wrap{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .grid{grid-template-columns:1fr;gap:56px}
+  form{grid-template-columns:1fr}
+  .langs button{padding:8px 4px}
+  .brand img{height:30px}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Bakery","name":"Le Confiseur","description":"Pâtisserie & Atelier","telephone":"+4915115846098","email":"kontakt@leconfiseur.de","sameAs":["https://www.instagram.com/le.confiseur/"],"address":{"@type":"PostalAddress","streetAddress":"Annastraße 35","postalCode":"39108","addressLocality":"Magdeburg","addressCountry":"DE"}}
+</script>
+</head>
+<body>
+<a class="skip" href="#cakes" data-t="skip">Zum Sortiment</a>
+
+<header class="top" id="top">
+  <div class="wrap">
+    <a class="brand" href="#" aria-label="Le Confiseur"><img src="img/logo-word.webp" width="563" height="160" alt="Le Confiseur · Pâtisserie &amp; Atelier"></a>
+    <nav class="nav" aria-label="Main">
+      <a href="#cakes" data-t="nav_cakes">Torten</a>
+      <a href="#small" data-t="nav_small">Cupcakes</a>
+      <a href="#order" data-t="nav_order">Bestellen</a>
+    </nav>
+    <div class="langs" role="group" aria-label="Language" id="langs"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="caps">Pâtisserie &amp; Atelier</p>
+        <h1 id="h1"></h1>
+        <p class="lead" data-t="lead"></p>
+        <div class="ctas">
+          <a class="btn" href="#cakes"><span data-t="cta_fill"></span><span class="arr" aria-hidden="true">→</span></a>
+          <a class="link" href="#order" data-t="cta_order"></a>
+        </div>
+        <p class="tally" id="tally"></p>
+      </div>
+      <figure class="hero-art">
+        <div class="arch"><video id="heroVideo" src="img/hero-video.mp4" poster="img/hero-poster.webp" width="720" height="960" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></div>
+        <figcaption id="heroCap"></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="sec" id="cakes" aria-labelledby="cakesTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="cakesTitle"><span data-t="nav_cakes"></span><sup id="cakesCount"></sup></h2>
+        <p data-t="cakes_intro"></p>
+      </div>
+      <div class="filters" role="group" id="filters"></div>
+      <ul class="grid" id="cakeGrid"></ul>
+    </div>
+  </section>
+
+  <section class="sec small" id="small" aria-labelledby="smallTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="smallTitle"><span data-t="small_title"></span><sup id="smallCount"></sup></h2>
+        <p data-t="small_intro"></p>
+      </div>
+      <ul class="grid" id="smallGrid"></ul>
+    </div>
+  </section>
+
+  <section class="sec order" id="order" aria-labelledby="orderTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 id="orderTitle" data-t="order_title"></h2>
+        <p data-t="order_intro"></p>
+      </div>
+      <div class="order-grid">
+        <div>
+          <ol class="steps">
+            <li><b data-t="s1"></b><span data-t="s1t"></span></li>
+            <li><b data-t="s2"></b><span data-t="s2t"></span></li>
+            <li><b data-t="s3"></b><span data-t="s3t"></span></li>
+          </ol>
+          <dl class="contacts" id="contacts"></dl>
+        </div>
+        <form id="form" novalidate>
+          <div class="f"><label for="fName" data-t="f_name"></label><input id="fName" name="name" autocomplete="name" required></div>
+          <div class="f"><label for="fContact" data-t="f_contact"></label><input id="fContact" name="contact" autocomplete="tel" required></div>
+          <div class="f full"><label for="fProduct" data-t="f_product"></label><select id="fProduct" name="product" required></select></div>
+          <div class="f"><label for="fDate" data-t="f_date"></label><input id="fDate" name="date" type="date"></div>
+          <div class="f"><label for="fGuests" data-t="f_guests"></label><input id="fGuests" name="guests" type="number" min="1" max="300" inputmode="numeric"></div>
+          <div class="f full"><label for="fMsg" data-t="f_msg"></label><textarea id="fMsg" name="msg" rows="3"></textarea></div>
+          <div class="send">
+            <button class="btn light" type="submit" data-via="mail"><span data-t="send_mail"></span><span class="arr" aria-hidden="true">→</span></button>
+            <button class="btn ghost" type="submit" data-via="wa" id="waBtn" data-t="send_wa"></button>
+          </div>
+          <p class="form-note" id="note" role="status"></p>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <img src="img/logo-full.webp" width="435" height="440" alt="Le Confiseur">
+    <p><span id="year"></span> Le Confiseur · Pâtisserie &amp; Atelier<br><a class="foot-addr" id="footAddr" href="#" target="_blank" rel="noopener">Annastraße 35, 39108 Magdeburg</a> · <a class="foot-addr" id="footIg" href="https://www.instagram.com/le.confiseur/" target="_blank" rel="noopener">@le.confiseur</a><br><span data-t="foot"></span></p>
+    <div class="langs" role="group" aria-label="Language" id="langs2"></div>
+  </div>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <button class="x" id="dlgClose" type="button">×</button>
+  <div class="dlg">
+    <figure><img id="dlgImg" alt=""></figure>
+    <div class="dlg-body">
+      <p class="caps" id="dlgKind"></p>
+      <h2 id="dlgTitle"></h2>
+      <h4 data-t="composition"></h4>
+      <ol class="strata big" id="dlgLayers"></ol>
+      <button class="btn" type="button" id="dlgOrder"><span data-t="ask"></span><span class="arr" aria-hidden="true">→</span></button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+/* ===== Контакты кондитерской ===== */
+const CONFIG = {
+  phone: "+49 151 15846098",      // как показывать на сайте
+  whatsapp: "4915115846098",      // только цифры, с кодом страны
+  email: "kontakt@leconfiseur.de",
+  instagram: "le.confiseur",      // без @
+  street: "Annastraße 35",
+  zip: "39108",
+  city: "Magdeburg"
+};
+const ADDRESS = `${CONFIG.street}, ${CONFIG.zip} ${CONFIG.city}`;
+const MAP_URL = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(ADDRESS);
+const IG_URL = "https://www.instagram.com/" + CONFIG.instagram + "/";
+
+const LANGS = ["de","en","fr","uk","ru"];
+const LANG_LABEL = {de:"DE",en:"EN",fr:"FR",uk:"UA",ru:"RU"};
+
+/* ---- interface text ---- */
+const T = {
+  skip:{de:"Zum Sortiment",en:"Skip to the range",fr:"Aller à la carte",uk:"До асортименту",ru:"К ассортименту"},
+  nav_cakes:{de:"Torten",en:"Cakes",fr:"Gâteaux",uk:"Торти",ru:"Торты"},
+  nav_small:{de:"Cupcakes",en:"Cupcakes",fr:"Cupcakes",uk:"Капкейки",ru:"Капкейки"},
+  nav_order:{de:"Bestellen",en:"Order",fr:"Commander",uk:"Замовити",ru:"Заказать"},
+  h1:{de:["Von Hand,","mit Liebe."],en:["By hand,","with love."],fr:["À la main,","avec amour."],uk:["Вручну,","з любов’ю."],ru:["Вручную,","с любовью."]},
+  lead:{
+    de:"Torten und Cupcakes aus unserem Atelier, auf Bestellung gebacken. Sie wählen die Füllung, den Rest besprechen wir gemeinsam.",
+    en:"Cakes and cupcakes from our atelier, baked to order. You choose the filling, and we work out the rest together.",
+    fr:"Gâteaux et cupcakes de notre atelier, préparés sur commande. Vous choisissez la garniture, nous voyons le reste ensemble.",
+    uk:"Торти й капкейки з нашого ательє, випікаємо на замовлення. Ви обираєте начинку, решту обговоримо разом.",
+    ru:"Торты и капкейки из нашего ателье, печём на заказ. Вы выбираете начинку, остальное обсудим вместе."},
+  cta_fill:{de:"Füllungen ansehen",en:"See the fillings",fr:"Voir les garnitures",uk:"Дивитися начинки",ru:"Смотреть начинки"},
+  cta_order:{de:"Torte anfragen",en:"Request a cake",fr:"Demander un gâteau",uk:"Замовити торт",ru:"Заказать торт"},
+  tally:{de:"{a} Torten · {b} Cupcakes",en:"{a} cakes · {b} cupcakes",fr:"{a} gâteaux · {b} cupcakes",uk:"{a} тортів · {b} капкейків",ru:"{a} тортов · {b} капкейков"},
+  hero_cap:{de:"Im Atelier: ein letzter Hauch Puderzucker",en:"In the atelier: a final dusting of icing sugar",fr:"À l’atelier : un dernier voile de sucre glace",uk:"В ательє: останній штрих цукрової пудри",ru:"В ателье: последний штрих сахарной пудры"},
+  cakes_intro:{
+    de:"Jede Füllung so, wie sie im Anschnitt aussieht. Die Farbleiste neben dem Namen zeigt, woraus die Torte besteht.",
+    en:"Every filling as it looks when you cut into it. The colour bar beside each name shows what the cake is made of.",
+    fr:"Chaque garniture telle qu'elle apparaît à la coupe. La barre de couleur près du nom montre de quoi le gâteau est fait.",
+    uk:"Кожна начинка така, якою вона є в розрізі. Кольорова смужка біля назви показує, з чого складається торт.",
+    ru:"Каждая начинка такой, какой она выглядит в разрезе. Цветная полоска рядом с названием показывает, из чего состоит торт."},
+  small_title:{de:"Cupcakes",en:"Cupcakes",fr:"Cupcakes",uk:"Капкейки",ru:"Капкейки"},
+  small_intro:{
+    de:"Kleine Formate mit Füllung im Kern: für Geburtstage, Sweet Tables oder einfach so.",
+    en:"Small formats with a filled centre: for birthdays, dessert tables or just because.",
+    fr:"Petits formats au cœur garni : pour les anniversaires, les sweet tables ou simplement pour le plaisir.",
+    uk:"Маленькі формати з начинкою всередині: для днів народження, кенді-барів або просто так.",
+    ru:"Маленькие форматы с начинкой внутри: для дней рождения, кэнди-баров или просто так."},
+  all:{de:"Alle",en:"All",fr:"Tout",uk:"Усі",ru:"Все"},
+  choco:{de:"Schokolade",en:"Chocolate",fr:"Chocolat",uk:"Шоколад",ru:"Шоколад"},
+  vanilla:{de:"Vanille",en:"Vanilla",fr:"Vanille",uk:"Ваніль",ru:"Ваниль"},
+  berry:{de:"Beeren",en:"Berries",fr:"Fruits rouges",uk:"Ягоди",ru:"Ягоды"},
+  nut:{de:"Nüsse & Karamell",en:"Nuts & caramel",fr:"Noisettes & caramel",uk:"Горіхи й карамель",ru:"Орехи и карамель"},
+  kind_cake:{de:"Torte",en:"Cake",fr:"Gâteau",uk:"Торт",ru:"Торт"},
+  kind_small:{de:"Cupcake",en:"Cupcake",fr:"Cupcake",uk:"Капкейк",ru:"Капкейк"},
+  composition:{de:"Zusammensetzung",en:"What's inside",fr:"Composition",uk:"Склад",ru:"Состав"},
+  ask:{de:"Diese Füllung anfragen",en:"Ask about this filling",fr:"Demander cette garniture",uk:"Замовити цю начинку",ru:"Заказать эту начинку"},
+  close:{de:"Schließen",en:"Close",fr:"Fermer",uk:"Закрити",ru:"Закрыть"},
+  open:{de:"Details ansehen",en:"View details",fr:"Voir le détail",uk:"Детальніше",ru:"Подробнее"},
+  order_title:{de:"Bestellen",en:"How to order",fr:"Commander",uk:"Як замовити",ru:"Как заказать"},
+  order_intro:{
+    de:"Schreiben Sie uns, welche Füllung Sie möchten und für welchen Tag. Wir melden uns mit Größe, Dekor und Preis.",
+    en:"Tell us which filling you'd like and for which day. We'll come back to you with size, decoration and price.",
+    fr:"Dites-nous quelle garniture vous souhaitez et pour quel jour. Nous revenons vers vous avec la taille, le décor et le prix.",
+    uk:"Напишіть, яку начинку ви хочете і на який день. Ми відповімо щодо розміру, декору та ціни.",
+    ru:"Напишите, какую начинку вы хотите и на какой день. Мы ответим по размеру, декору и цене."},
+  s1:{de:"Füllung wählen",en:"Choose a filling",fr:"Choisir la garniture",uk:"Оберіть начинку",ru:"Выберите начинку"},
+  s1t:{de:"Eine Torte oder einen Cupcake aus dem Sortiment.",en:"Any cake or cupcake from the range above.",fr:"Un gâteau ou un cupcake de la carte.",uk:"Будь-який торт або капкейк з асортименту.",ru:"Любой торт или капкейк из ассортимента."},
+  s2:{de:"Details besprechen",en:"Talk through the details",fr:"Préciser les détails",uk:"Обговоріть деталі",ru:"Обсудите детали"},
+  s2t:{de:"Größe, Dekor und Termin klären wir persönlich mit Ihnen.",en:"We agree size, decoration and date with you in person.",fr:"Nous convenons avec vous de la taille, du décor et de la date.",uk:"Розмір, декор і дату узгоджуємо з вами особисто.",ru:"Размер, декор и дату согласуем с вами лично."},
+  s3:{de:"Frisch zum Termin",en:"Fresh on the day",fr:"Frais le jour J",uk:"Свіжий до дати",ru:"Свежий к дате"},
+  s3t:{de:"Wir backen Ihre Torte zum vereinbarten Datum.",en:"We bake your cake for the agreed date.",fr:"Nous préparons votre gâteau pour la date convenue.",uk:"Ми випікаємо торт до узгодженої дати.",ru:"Мы печём торт к согласованной дате."},
+  c_phone:{de:"Telefon / WhatsApp",en:"Phone / WhatsApp",fr:"Téléphone / WhatsApp",uk:"Телефон / WhatsApp",ru:"Телефон / WhatsApp"},
+  c_mail:{de:"E-Mail",en:"Email",fr:"E-mail",uk:"Пошта",ru:"Почта"},
+  c_ig:{de:"Instagram",en:"Instagram",fr:"Instagram",uk:"Instagram",ru:"Instagram"},
+  c_addr:{de:"Adresse",en:"Address",fr:"Adresse",uk:"Адреса",ru:"Адрес"},
+  c_map:{de:"Route planen",en:"Get directions",fr:"Itinéraire",uk:"Прокласти маршрут",ru:"Построить маршрут"},
+  f_name:{de:"Ihr Name",en:"Your name",fr:"Votre nom",uk:"Ваше ім'я",ru:"Ваше имя"},
+  f_contact:{de:"Telefon oder E-Mail",en:"Phone or email",fr:"Téléphone ou e-mail",uk:"Телефон або пошта",ru:"Телефон или почта"},
+  f_product:{de:"Füllung",en:"Filling",fr:"Garniture",uk:"Начинка",ru:"Начинка"},
+  f_pick:{de:"Bitte wählen",en:"Please choose",fr:"Veuillez choisir",uk:"Оберіть",ru:"Выберите"},
+  f_unsure:{de:"Noch unentschlossen, bitte beraten",en:"Not sure yet, please advise",fr:"Pas encore décidé, conseillez-moi",uk:"Ще не вирішили, порадьте",ru:"Ещё не решили, посоветуйте"},
+  f_date:{de:"Wunschtermin",en:"Date needed",fr:"Date souhaitée",uk:"Бажана дата",ru:"Желаемая дата"},
+  f_guests:{de:"Personen",en:"Guests",fr:"Personnes",uk:"Кількість гостей",ru:"Количество гостей"},
+  f_msg:{de:"Wünsche zu Größe und Dekor",en:"Size and decoration wishes",fr:"Souhaits de taille et de décor",uk:"Побажання щодо розміру й декору",ru:"Пожелания по размеру и декору"},
+  send_mail:{de:"Per E-Mail senden",en:"Send by email",fr:"Envoyer par e-mail",uk:"Надіслати поштою",ru:"Отправить по почте"},
+  send_wa:{de:"Per WhatsApp senden",en:"Send via WhatsApp",fr:"Envoyer via WhatsApp",uk:"Надіслати у WhatsApp",ru:"Отправить в WhatsApp"},
+  err:{de:"Bitte Name, Kontakt und Füllung angeben.",en:"Please fill in your name, contact and filling.",fr:"Indiquez votre nom, vos coordonnées et la garniture.",uk:"Вкажіть ім'я, контакт і начинку.",ru:"Укажите имя, контакт и начинку."},
+  sent:{de:"Ihr E-Mail- oder WhatsApp-Programm öffnet sich mit der fertigen Nachricht.",en:"Your email or WhatsApp app opens with the message ready to send.",fr:"Votre messagerie ou WhatsApp s'ouvre avec le message prêt à envoyer.",uk:"Відкриється пошта або WhatsApp з готовим повідомленням.",ru:"Откроется почта или WhatsApp с готовым сообщением."},
+  subj:{de:"Anfrage",en:"Request",fr:"Demande",uk:"Запит",ru:"Запрос"},
+  foot:{de:"Alle Torten werden auf Bestellung gebacken.",en:"Every cake is baked to order.",fr:"Chaque gâteau est préparé sur commande.",uk:"Кожен торт випікаємо на замовлення.",ru:"Каждый торт печём на заказ."}
+};
+
+/* ---- layers: colour of the stratum + names ---- */
+const L = {
+  choc_sponge:{c:"#3D2620",de:"Schokoladenbiskuit",en:"Chocolate sponge",fr:"Biscuit au chocolat",uk:"Шоколадний бісквіт",ru:"Шоколадный бисквит"},
+  vanilla_sponge:{c:"#E6C98C",de:"Vanillebiskuit",en:"Vanilla sponge",fr:"Biscuit vanille",uk:"Ванільний бісквіт",ru:"Ванильный бисквит"},
+  pistachio_sponge:{c:"#9BAE57",de:"Pistazienbiskuit",en:"Pistachio sponge",fr:"Biscuit pistache",uk:"Фісташковий бісквіт",ru:"Фисташковый бисквит"},
+  redvelvet_sponge:{c:"#9C1E2B",de:"Red-Velvet-Biskuit mit Kakao",en:"Red velvet sponge with cocoa",fr:"Biscuit red velvet au cacao",uk:"Бісквіт ред вельвет з какао",ru:"Бисквит ред вельвет с какао"},
+  condensed_sponge:{c:"#DDBB7E",de:"Böden mit gezuckerter Kondensmilch",en:"Sponge with sweetened condensed milk",fr:"Biscuit au lait concentré sucré",uk:"Коржі на згущеному молоці",ru:"Коржи на сгущённом молоке"},
+  choc_dough:{c:"#3A221D",de:"Saftiger Schokoladenteig",en:"Moist chocolate cake",fr:"Moelleux au chocolat",uk:"Соковите шоколадне тісто",ru:"Сочное шоколадное тесто"},
+  choc_cupcake:{c:"#3A221D",de:"Schokoladen-Cupcake",en:"Chocolate cupcake",fr:"Cupcake au chocolat",uk:"Шоколадний капкейк",ru:"Шоколадный капкейк"},
+  cream_cheese:{c:"#F3EDE2",de:"Frischkäsecreme",en:"Cream cheese frosting",fr:"Crème au fromage frais",uk:"Крем-чиз",ru:"Крем-чиз"},
+  cream_cheese_whipped:{c:"#F7F2EA",de:"Creme aus Frischkäse und Sahne",en:"Cream cheese and whipped cream",fr:"Crème fromage frais et chantilly",uk:"Крем із сиру та вершків",ru:"Крем из сыра и сливок"},
+  cream_cheese_butter:{c:"#EEDDBE",de:"Frischkäsecreme auf Butterbasis",en:"Cream cheese buttercream",fr:"Crème fromage frais au beurre",uk:"Крем-чиз на вершковому маслі",ru:"Крем-чиз на сливочном масле"},
+  choc_cream_cheese:{c:"#8C5B3F",de:"Schokoladen-Frischkäsecreme",en:"Chocolate cream cheese",fr:"Crème chocolat au fromage frais",uk:"Шоколадний крем-чиз",ru:"Шоколадный крем-чиз"},
+  choc_cream:{c:"#7B4B33",de:"Schokoladencreme",en:"Chocolate cream",fr:"Crème au chocolat",uk:"Шоколадний крем",ru:"Шоколадный крем"},
+  choc_buttercream:{c:"#5C3525",de:"Schokoladen-Buttercreme",en:"Chocolate buttercream",fr:"Crème au beurre chocolat",uk:"Шоколадний масляний крем",ru:"Шоколадный масляный крем"},
+  choc_mousse:{c:"#6E4231",de:"Schokoladenmousse",en:"Chocolate mousse",fr:"Mousse au chocolat",uk:"Шоколадний мус",ru:"Шоколадный мусс"},
+  choc_ganache:{c:"#2F1A14",de:"Schokoladenganache",en:"Chocolate ganache",fr:"Ganache chocolat",uk:"Шоколадний ганаш",ru:"Шоколадный ганаш"},
+  caramel_cream:{c:"#BA844B",de:"Karamellcreme",en:"Caramel cream",fr:"Crème caramel",uk:"Карамельний крем",ru:"Карамельный крем"},
+  peanut_caramel:{c:"#C28A3C",de:"Karamell mit Erdnüssen",en:"Caramel with peanuts",fr:"Caramel aux cacahuètes",uk:"Карамель з арахісом",ru:"Карамель с арахисом"},
+  peanut_nougat:{c:"#B48B62",de:"Nougatcreme mit Erdnusspaste",en:"Nougat cream with peanut butter",fr:"Crème nougat au beurre de cacahuète",uk:"Крем-нуга з арахісовою пастою",ru:"Крем-нуга с арахисовой пастой"},
+  hazelnut_crunch:{c:"#A97B46",de:"Knusprige Schicht mit Haselnüssen",en:"Hazelnut crunch",fr:"Croustillant noisette",uk:"Хрусткий шар з фундуком",ru:"Хрустящий слой с фундуком"},
+  raspberry_confit:{c:"#A31F3B",de:"Himbeerkonfitüre",en:"Raspberry confit",fr:"Confit de framboise",uk:"Малинове конфі",ru:"Малиновое конфи"},
+  raspberry_coulis:{c:"#B8294A",de:"Himbeer-Coulis",en:"Raspberry coulis",fr:"Coulis de framboise",uk:"Малиновий кулі",ru:"Малиновый кули"},
+  raspberry_mousse:{c:"#E2A2B3",de:"Himbeermousse",en:"Raspberry mousse",fr:"Mousse framboise",uk:"Малиновий мус",ru:"Малиновый мусс"},
+  raspberry_mousse_white:{c:"#E6B0BE",de:"Himbeermousse mit weißer Schokolade",en:"Raspberry and white chocolate mousse",fr:"Mousse framboise et chocolat blanc",uk:"Малиновий мус на білому шоколаді",ru:"Малиновый мусс на белом шоколаде"},
+  raspberry_filling:{c:"#A51D3C",de:"Himbeerfüllung",en:"Raspberry centre",fr:"Cœur framboise",uk:"Малинова начинка",ru:"Малиновая начинка"},
+  strawberry_confit:{c:"#C42F3B",de:"Erdbeerkonfi",en:"Strawberry confit",fr:"Confit de fraise",uk:"Полуничне конфі",ru:"Клубничное конфи"},
+  strawberry_mousse:{c:"#EDB4BE",de:"Erdbeermousse",en:"Strawberry mousse",fr:"Mousse fraise",uk:"Полуничний мус",ru:"Клубничный мусс"},
+  strawberry_filling:{c:"#C42A3A",de:"Erdbeerfüllung",en:"Strawberry centre",fr:"Cœur fraise",uk:"Полунична начинка",ru:"Клубничная начинка"},
+  cherry_confit:{c:"#7E1429",de:"Kirschkonfitüre",en:"Cherry confit",fr:"Confit de cerise",uk:"Вишневе конфі",ru:"Вишнёвое конфи"},
+  cherry_filling:{c:"#6F0F23",de:"Fruchtige Kirschfüllung",en:"Fruity cherry centre",fr:"Cœur cerise fruité",uk:"Вишнева начинка",ru:"Вишнёвая начинка"},
+  spiced_cherry:{c:"#7B1227",de:"Würzige Kirschen",en:"Spiced cherries",fr:"Cerises épicées",uk:"Пряна вишня",ru:"Пряная вишня"},
+  berry_confit:{c:"#6B1932",de:"Beerenkonfi",en:"Berry confit",fr:"Confit de fruits rouges",uk:"Ягідне конфі",ru:"Ягодное конфи"},
+  blueberry_yogurt:{c:"#D8D2E6",de:"Joghurtmousse mit Heidelbeeren",en:"Yogurt mousse with blueberries",fr:"Mousse yaourt aux myrtilles",uk:"Йогуртовий мус з чорницею",ru:"Йогуртовый мусс с черникой"},
+  berries_caramel:{c:"#4E4A86",de:"Heidelbeeren und Erdbeeren mit Karamell",en:"Blueberries and strawberries with caramel",fr:"Myrtilles et fraises au caramel",uk:"Чорниця й полуниця з карамеллю",ru:"Черника и клубника с карамелью"},
+  plombir_mousse:{c:"#F2E8D3",de:"Plombir-Mousse",en:"Plombir ice-cream mousse",fr:"Mousse glacée plombir",uk:"Мус пломбір",ru:"Мусс пломбир"},
+  meringue:{c:"#EEE4D2",de:"Baiserschicht",en:"Meringue layer",fr:"Couche de meringue",uk:"Шар безе",ru:"Слой безе"},
+  coconut_ganache:{c:"#F0EBE1",de:"Kokos-Ganache mit weißer Schokolade",en:"Coconut and white chocolate ganache",fr:"Ganache coco et chocolat blanc",uk:"Кокосовий ганаш на білому шоколаді",ru:"Кокосовый ганаш на белом шоколаде"},
+  cognac_soak:{c:"#8C4B1D",de:"Tränke mit Cognac",en:"Cognac soak",fr:"Imbibage au cognac",uk:"Просочення з коньяком",ru:"Пропитка с коньяком"},
+  oreo:{c:"#2B2325",de:"Oreo-Kekse in der Mousse",en:"Oreo pieces in the mousse",fr:"Éclats d'Oreo dans la mousse",uk:"Шматочки Oreo в мусі",ru:"Кусочки Oreo в муссе"},
+  cream_mousse:{c:"#F2EBDF",de:"Cremige Sahne-Mousse",en:"Whipped cream mousse",fr:"Mousse à la crème",uk:"Вершковий мус",ru:"Сливочный мусс"},
+  pistachio_cream:{c:"#C4CD94",de:"Pistaziencreme",en:"Pistachio cream",fr:"Crème pistache",uk:"Фісташковий крем",ru:"Фисташковый крем"},
+  vanilla_cream:{c:"#F6EEDD",de:"Vanillecreme",en:"Vanilla cream",fr:"Crème vanille",uk:"Ванільний крем",ru:"Ванильный крем"},
+};
+
+/* ---- products ---- */
+const n = (de,en,fr,uk,ru)=>({de,en,fr,uk,ru});
+const P = [
+  {id:"goldener-schluessel",k:"cake",w:1000,h:1000,f:["choco","vanilla","nut"],name:n("Der Goldene Schlüssel","The Golden Key","La Clé d'Or","Золотий ключик","Золотой ключик"),l:["choc_sponge","caramel_cream","vanilla_sponge"]},
+  {id:"schokoladentraum",k:"cake",w:1000,h:1000,f:["choco","berry"],name:n("Schokoladentraum","Chocolate Dream","Rêve de chocolat","Шоколадна мрія","Шоколадная мечта"),l:["choc_sponge","choc_cream","strawberry_confit"]},
+  {id:"schokoladenzauber",k:"cake",w:1000,h:1000,f:["choco","nut"],name:n("Schokoladenzauber","Chocolate Spell","Sortilège chocolat","Шоколадне диво","Шоколадное волшебство"),l:["choc_sponge","choc_cream_cheese","hazelnut_crunch","choc_ganache"]},
+  {id:"zarter-kuss",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Zarter Kuss","Tender Kiss","Doux baiser","Ніжний поцілунок","Нежный поцелуй"),l:["vanilla_sponge","raspberry_coulis","cream_cheese_whipped","meringue","coconut_ganache"]},
+  {id:"pistazie-himbeere",k:"cake",w:1000,h:1000,f:["berry","nut"],name:n("Pistazie & Himbeere","Pistachio & Raspberry","Pistache & framboise","Фісташка й малина","Фисташка и малина"),l:["pistachio_sponge","raspberry_confit","cream_cheese"]},
+  {id:"schoko-kirsche",k:"cake",w:1000,h:1000,f:["choco","berry"],name:n("Schokolade & Kirsche","Chocolate & Cherry","Chocolat & cerise","Шоколад і вишня","Шоколад и вишня"),l:["choc_sponge","cherry_confit","cream_cheese","choc_mousse"]},
+  {id:"red-velvet",k:"cake",w:1000,h:1000,f:["berry"],name:n("Red Velvet","Red Velvet","Red Velvet","Ред Вельвет","Ред Вельвет"),l:["redvelvet_sponge","cream_cheese_whipped","raspberry_mousse_white","raspberry_confit"]},
+  {id:"schwarzwaelder",k:"cake",w:1000,h:1000,f:["choco","berry"],name:n("Schwarzwälder Kirschtorte","Black Forest Cake","Forêt-Noire","Шварцвальдський вишневий","Шварцвальдский вишнёвый"),l:["choc_sponge","cream_cheese_whipped","spiced_cherry"]},
+  {id:"vanilletorte",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Vanilletorte","Vanilla Cake","Gâteau vanille","Ванільний торт","Ванильный торт"),l:["vanilla_sponge","plombir_mousse","raspberry_coulis","cream_cheese"]},
+  {id:"vanille-beeren",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Vanilletorte mit Beeren","Vanilla Berry Cake","Vanille aux fruits rouges","Ванільний з ягодами","Ванильный с ягодами"),l:["vanilla_sponge","cream_cheese_whipped","berry_confit"]},
+  {id:"vanille-erdbeere",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Vanilletorte mit Erdbeeren","Vanilla Strawberry Cake","Vanille-fraise","Ванільний з полуницею","Ванильный с клубникой"),l:["vanilla_sponge","strawberry_mousse","strawberry_confit","cream_cheese_whipped"]},
+  {id:"joghurt-heidelbeere",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Joghurt & Heidelbeere","Yogurt & Blueberry","Yaourt & myrtille","Йогурт і чорниця","Йогурт и черника"),l:["vanilla_sponge","blueberry_yogurt","raspberry_mousse"]},
+  {id:"vanille-beeren-karamell",k:"cake",w:1000,h:1000,f:["vanilla","berry","nut"],name:n("Beeren & Karamell","Berries & Caramel","Fruits rouges & caramel","Ягоди й карамель","Ягоды и карамель"),l:["vanilla_sponge","cream_cheese_butter","berries_caramel"]},
+  {id:"vanille-himbeere",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Vanille & Himbeere","Vanilla & Raspberry","Vanille & framboise","Ваніль і малина","Ваниль и малина"),l:["vanilla_sponge","cream_cheese","raspberry_confit"]},
+  {id:"himbeertorte",k:"cake",w:1000,h:1000,f:["vanilla","berry"],name:n("Himbeertorte","Raspberry Cake","Gâteau framboise","Малиновий торт","Малиновый торт"),l:["condensed_sponge","cream_cheese_whipped","raspberry_confit"]},
+  {id:"schoko-himbeere",k:"cake",w:1000,h:1000,f:["choco","berry"],name:n("Schoko-Himbeertorte","Chocolate Raspberry Cake","Chocolat-framboise","Шоколадно-малиновий","Шоколадно-малиновый"),l:["choc_sponge","raspberry_confit","cream_cheese_whipped","choc_mousse"]},
+  {id:"schokoladentorte",k:"cake",w:1000,h:1000,f:["choco"],name:n("Schokoladentorte","Chocolate Cake","Gâteau au chocolat","Шоколадний торт","Шоколадный торт"),l:["choc_sponge","cognac_soak","choc_buttercream"]},
+  {id:"oreo",k:"cake",w:1000,h:1000,f:["choco"],name:n("Schoko-Oreo-Torte","Chocolate Oreo Cake","Chocolat Oreo","Шоколадний з Oreo","Шоколадный с Oreo"),l:["choc_sponge","cream_mousse","oreo","choc_mousse"]},
+  {id:"snickers",k:"cake",w:1000,h:1000,f:["choco","nut"],name:n("Snickers-Torte","Snickers Cake","Gâteau Snickers","Снікерс","Сникерс"),l:["choc_sponge","peanut_caramel","peanut_nougat","cream_cheese"]},
+
+  {id:"cupcake-vanille-himbeere",k:"small",w:1000,h:1000,name:n("Vanille-Cupcake mit Himbeere","Vanilla Raspberry Cupcake","Cupcake vanille-framboise","Ванільний з малиною","Ванильный с малиной"),l:["vanilla_sponge","raspberry_filling","cream_cheese"]},
+  {id:"cupcake-vanille-erdbeere",k:"small",w:1000,h:1000,name:n("Vanille-Cupcake mit Erdbeere","Vanilla Strawberry Cupcake","Cupcake vanille-fraise","Ванільний з полуницею","Ванильный с клубникой"),l:["vanilla_sponge","strawberry_filling","cream_cheese"]},
+  {id:"cupcake-pistazie",k:"small",w:1000,h:1000,name:n("Pistazien-Cupcake","Pistachio Cupcake","Cupcake pistache","Фісташковий капкейк","Фисташковый капкейк"),l:["pistachio_cream","pistachio_sponge","raspberry_filling"]},
+  {id:"cupcake-schoko-kirsche",k:"small",w:1000,h:1000,name:n("Schoko-Cupcake mit Kirsche","Chocolate Cherry Cupcake","Cupcake chocolat-cerise","Шоколадний з вишнею","Шоколадный с вишней"),l:["vanilla_cream","choc_dough","cherry_filling"]},
+  {id:"cupcake-erdnuss-karamell",k:"small",w:1000,h:1000,name:n("Schoko-Cupcake mit Erdnuss & Karamell","Peanut Caramel Cupcake","Cupcake cacahuète-caramel","Шоколадний з арахісом і карамеллю","Шоколадный с арахисом и карамелью"),l:["cream_cheese","peanut_caramel","choc_cupcake"]}
+];
+const CAKES = P.filter(p=>p.k==="cake"), SMALL = P.filter(p=>p.k!=="cake");
+
+/* ---- state ---- */
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let lang = (()=>{const s=store.get("lc-lang");if(LANGS.includes(s))return s;const b=(navigator.language||"de").slice(0,2).toLowerCase();return LANGS.includes(b)?b:"de"})();
+let fam = "all";
+const $ = s=>document.querySelector(s);
+const t = k=>T[k][lang];
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const strata = keys=>keys.map(k=>`<li style="--c:${L[k].c}">${esc(L[k][lang])}</li>`).join("");
+
+function card(p,i,total){
+  return `<li class="card" data-id="${p.id}" data-f="${(p.f||[]).join(" ")}">
+    <figure class="card-img"><img src="img/${p.id}.webp" width="${p.w}" height="${p.h}" loading="lazy" decoding="async" alt="${esc(p.name[lang])}"></figure>
+    <div class="card-body">
+      <span class="card-no">${String(i+1).padStart(2,"0")}</span>
+      <h3><button class="card-open" type="button" data-id="${p.id}" aria-haspopup="dialog">${esc(p.name[lang])}</button></h3>
+      <ul class="strata" aria-label="${esc(t("composition"))}">${strata(p.l)}</ul>
+    </div></li>`;
+}
+
+function renderLangs(){
+  for(const id of ["langs","langs2"]){
+    $("#"+id).innerHTML = LANGS.map(l=>`<button type="button" lang="${l}" data-lang="${l}" aria-pressed="${l===lang}">${LANG_LABEL[l]}</button>`).join("");
+  }
+}
+function renderFilters(){
+  const fams=["all","choco","vanilla","berry","nut"];
+  $("#filters").setAttribute("aria-label",t("nav_cakes"));
+  $("#filters").innerHTML = fams.map(f=>{
+    const c = f==="all"?CAKES.length:CAKES.filter(p=>p.f.includes(f)).length;
+    return `<button type="button" data-fam="${f}" aria-pressed="${f===fam}">${esc(t(f))}<sup>${c}</sup></button>`;
+  }).join("");
+}
+function applyFilter(animate){
+  document.querySelectorAll("#cakeGrid .card").forEach(el=>{
+    const show = fam==="all" || el.dataset.f.split(" ").includes(fam);
+    el.hidden = !show;
+    el.classList.remove("enter");
+    if(animate && show){void el.offsetWidth;el.classList.add("enter")}
+  });
+}
+function renderSelect(){
+  const sel=$("#fProduct"), v=sel.value;
+  const og=(label,list)=>`<optgroup label="${esc(label)}">${list.map(p=>`<option value="${p.id}">${esc(p.name[lang])}</option>`).join("")}</optgroup>`;
+  sel.innerHTML = `<option value="">${esc(t("f_pick"))}</option>`+og(t("nav_cakes"),CAKES)+og(t("small_title"),SMALL)+`<option value="unsure">${esc(t("f_unsure"))}</option>`;
+  sel.value=v;
+}
+function renderContacts(){
+  const rows=[];
+  if(CONFIG.street) rows.push([t("c_addr"),`<address class="addr">${esc(CONFIG.street)}<br>${esc(CONFIG.zip)} ${esc(CONFIG.city)}</address><a class="map" href="${MAP_URL}" target="_blank" rel="noopener">${esc(t("c_map"))}</a>`]);
+  if(CONFIG.phone) rows.push([t("c_phone"),`<a href="tel:${CONFIG.phone.replace(/\s/g,"")}">${esc(CONFIG.phone)}</a>`]);
+  if(CONFIG.email) rows.push([t("c_mail"),`<a href="mailto:${esc(CONFIG.email)}">${esc(CONFIG.email)}</a>`]);
+  if(CONFIG.instagram) rows.push([t("c_ig"),`<a href="${IG_URL}" target="_blank" rel="noopener">@${esc(CONFIG.instagram)}</a>`]);
+  $("#contacts").innerHTML = rows.map(([a,b])=>`<dt>${esc(a)}</dt><dd>${b}</dd>`).join("");
+  $("#waBtn").hidden = !CONFIG.whatsapp;
+}
+
+function render(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-t]").forEach(el=>{el.textContent=t(el.dataset.t)});
+  $("#h1").innerHTML = t("h1").map((s,i)=>`<span class="ln"><span style="--i:${i}">${esc(s)}</span></span>`).join("");
+  $("#tally").textContent = t("tally").replace("{a}",CAKES.length).replace("{b}",SMALL.length);
+  $("#heroCap").textContent = t("hero_cap");
+  $("#cakesCount").textContent = CAKES.length;
+  $("#smallCount").textContent = SMALL.length;
+  $("#cakeGrid").innerHTML = CAKES.map((p,i)=>card(p,i)).join("");
+  $("#smallGrid").innerHTML = SMALL.map((p,i)=>card(p,i)).join("");
+  $("#dlgClose").setAttribute("aria-label",t("close"));
+  renderLangs(); renderFilters(); applyFilter(false); renderSelect(); renderContacts();
+  if(current) fillDialog(current);
+}
+
+/* ---- dialog ---- */
+const dlg=$("#dlg"); let current=null;
+function fillDialog(p){
+  $("#dlgImg").src=`img/${p.id}.webp`; $("#dlgImg").alt=p.name[lang];
+  $("#dlgKind").textContent = t(p.k==="cake"?"kind_cake":"kind_small");
+  $("#dlgTitle").textContent = p.name[lang];
+  $("#dlgLayers").innerHTML = strata(p.l);
+}
+function openDialog(id){
+  current=P.find(p=>p.id===id); if(!current) return;
+  fillDialog(current);
+  if(typeof dlg.showModal==="function") dlg.showModal(); else dlg.setAttribute("open","");
+}
+function closeDialog(){ if(dlg.open) dlg.close(); }
+dlg.addEventListener("close",()=>{current=null});
+dlg.addEventListener("click",e=>{if(e.target===dlg) closeDialog()});
+$("#dlgClose").addEventListener("click",closeDialog);
+$("#dlgOrder").addEventListener("click",()=>{
+  const id=current&&current.id; closeDialog();
+  if(id){$("#fProduct").value=id;}
+  document.getElementById("order").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+  setTimeout(()=>$("#fName").focus({preventScroll:true}),600);
+});
+
+/* ---- events ---- */
+document.addEventListener("click",e=>{
+  const lb=e.target.closest("[data-lang]");
+  if(lb){lang=lb.dataset.lang;store.set("lc-lang",lang);render();return}
+  const fb=e.target.closest("[data-fam]");
+  if(fb){fam=fb.dataset.fam;renderFilters();applyFilter(true);return}
+  const ob=e.target.closest(".card-open");
+  if(ob){openDialog(ob.dataset.id)}
+});
+
+/* ---- form: builds a ready message, sent through the visitor's own mail app or WhatsApp ---- */
+let via="mail";
+document.querySelectorAll("#form [data-via]").forEach(b=>b.addEventListener("click",()=>{via=b.dataset.via}));
+$("#form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const f=e.target, note=$("#note");
+  const name=f.name.value.trim(), contact=f.contact.value.trim(), pid=f.product.value;
+  if(!name||!contact||!pid){note.textContent=t("err");note.className="form-note err";return}
+  const p=P.find(x=>x.id===pid);
+  const prod=p?p.name[lang]:t("f_unsure");
+  const lines=[
+    `${t("f_name")}: ${name}`,
+    `${t("f_contact")}: ${contact}`,
+    `${t("f_product")}: ${prod}`,
+    f.date.value?`${t("f_date")}: ${f.date.value}`:"",
+    f.guests.value?`${t("f_guests")}: ${f.guests.value}`:"",
+    f.msg.value.trim()?`${t("f_msg")}: ${f.msg.value.trim()}`:""
+  ].filter(Boolean).join("\n");
+  const subject=`${t("subj")}: ${prod}`;
+  const url = via==="wa"
+    ? `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(subject+"\n\n"+lines)}`
+    : `mailto:${CONFIG.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines)}`;
+  note.textContent=t("sent"); note.className="form-note";
+  if(via==="wa") window.open(url,"_blank","noopener"); else location.href=url;
+});
+
+/* ---- header hairline ---- */
+const top_=$("#top");
+addEventListener("scroll",()=>top_.classList.toggle("scrolled",scrollY>8),{passive:true});
+$("#year").textContent="© "+new Date().getFullYear();
+/* hero video: still frame for visitors who prefer less motion */
+const heroVideo=$("#heroVideo");
+if(matchMedia("(prefers-reduced-motion: reduce)").matches){heroVideo.removeAttribute("autoplay");heroVideo.pause();}
+$("#footAddr").textContent=ADDRESS; $("#footAddr").href=MAP_URL;
+$("#footIg").textContent="@"+CONFIG.instagram; $("#footIg").href=IG_URL;
+
+render();
+</script>
+</body>
+</html>
