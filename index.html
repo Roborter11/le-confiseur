@@ -69,7 +69,6 @@ h1,h2,h3{font-family:var(--display);font-weight:400;text-wrap:balance;margin:0}
 .btn .arr{display:inline-block;transition:transform .4s var(--ease)}
 .btn:hover .arr{transform:translateX(4px)}
 .link{font-size:15px;text-decoration:none;border-bottom:1px solid var(--gold);padding-bottom:2px}
-.tally{font-size:14px;color:var(--plum-soft);font-variant-numeric:tabular-nums;margin:0}
 .hero-art{margin:0}
 .hero-art{max-width:460px;width:100%;justify-self:end}
 /* video sits a little transparent over a blush ground, with a plum veil on top */
@@ -83,19 +82,11 @@ section[id]{scroll-margin-top:90px}
 .sec{padding:clamp(56px,8vw,112px) 0}
 .sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px clamp(24px,5vw,80px);align-items:end;padding-bottom:36px;border-bottom:1px solid var(--line)}
 .sec-head h2{font-size:clamp(40px,5.2vw,76px);line-height:1}
-.sec-head h2 sup{font:500 13px/1 var(--body);letter-spacing:.1em;color:var(--gold);vertical-align:top;margin-left:10px;position:relative;top:.5em;font-variant-numeric:tabular-nums}
 .sec-head p{margin:0;color:var(--plum-soft);max-width:32rem}
-.filters{display:flex;flex-wrap:wrap;gap:6px 28px;padding:22px 0 0}
-.filters button{background:none;border:0;padding:6px 0;cursor:pointer;font-size:15px;color:var(--plum-soft);position:relative;transition:color .3s}
-.filters button sup{font-size:11px;margin-left:3px;font-variant-numeric:tabular-nums;color:var(--gold)}
-.filters button::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--plum);transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
-.filters button[aria-pressed="true"]{color:var(--plum)}
-.filters button[aria-pressed="true"]::after{transform:scaleX(1)}
 
 .grid{list-style:none;margin:0;padding:48px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:64px clamp(20px,3vw,40px)}
 .card{position:relative;display:flex;flex-direction:column;gap:20px}
 .card[hidden]{display:none}
-@media (prefers-reduced-motion:no-preference){.card.enter{animation:enter .7s var(--ease) both}}
 @keyframes enter{from{opacity:0;transform:translateY(14px)}}
 /* photos sit on white; multiply lets the page colour show through so each slice stands on the page */
 .card-img{position:relative;aspect-ratio:1/1;overflow:hidden;margin:0;background:var(--porcelain)}
@@ -191,7 +182,7 @@ dialog[open]{animation:dlg .5s var(--ease)}
   .arch video{animation:cut 1.5s cubic-bezier(.7,0,.15,1) both .1s,settle 2.2s var(--ease) both .1s}
   .arch{animation:fade 1.2s ease both .2s}
   @supports (animation-timeline:view()){
-    .grid .card:not(.enter){animation:enter linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
+    .grid .card{animation:enter linear both;animation-timeline:view();animation-range:entry 0% entry 30%}
   }
 }
 @keyframes rise{from{transform:translateY(105%)}}
@@ -257,7 +248,6 @@ dialog[open]{animation:dlg .5s var(--ease)}
           <a class="btn" href="#cakes"><span data-t="cta_fill"></span><span class="arr" aria-hidden="true">→</span></a>
           <a class="link" href="#order" data-t="cta_order"></a>
         </div>
-        <p class="tally" id="tally"></p>
       </div>
       <figure class="hero-art">
         <div class="arch"><video id="heroVideo" src="img/hero-video.mp4" poster="img/hero-poster.webp" width="720" height="960" autoplay muted loop playsinline preload="auto" aria-hidden="true"></video></div>
@@ -269,10 +259,9 @@ dialog[open]{animation:dlg .5s var(--ease)}
   <section class="sec" id="cakes" aria-labelledby="cakesTitle">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="cakesTitle"><span data-t="nav_cakes"></span><sup id="cakesCount"></sup></h2>
+        <h2 id="cakesTitle" data-t="nav_cakes"></h2>
         <p data-t="cakes_intro"></p>
       </div>
-      <div class="filters" role="group" id="filters"></div>
       <ul class="grid" id="cakeGrid"></ul>
     </div>
   </section>
@@ -280,7 +269,7 @@ dialog[open]{animation:dlg .5s var(--ease)}
   <section class="sec small" id="small" aria-labelledby="smallTitle">
     <div class="wrap">
       <div class="sec-head">
-        <h2 id="smallTitle"><span data-t="small_title"></span><sup id="smallCount"></sup></h2>
+        <h2 id="smallTitle" data-t="small_title"></h2>
         <p data-t="small_intro"></p>
       </div>
       <ul class="grid" id="smallGrid"></ul>
@@ -375,7 +364,6 @@ const T = {
     ru:"Торты и капкейки из нашего ателье, печём на заказ. Вы выбираете начинку, остальное обсудим вместе."},
   cta_fill:{de:"Füllungen ansehen",en:"See the fillings",fr:"Voir les garnitures",uk:"Дивитися начинки",ru:"Смотреть начинки"},
   cta_order:{de:"Torte anfragen",en:"Request a cake",fr:"Demander un gâteau",uk:"Замовити торт",ru:"Заказать торт"},
-  tally:{de:"{a} Torten · {b} Cupcakes",en:"{a} cakes · {b} cupcakes",fr:"{a} gâteaux · {b} cupcakes",uk:"{a} тортів · {b} капкейків",ru:"{a} тортов · {b} капкейков"},
   hero_cap:{de:"Im Atelier: ein letzter Hauch Puderzucker",en:"In the atelier: a final dusting of icing sugar",fr:"À l’atelier : un dernier voile de sucre glace",uk:"В ательє: останній штрих цукрової пудри",ru:"В ателье: последний штрих сахарной пудры"},
   cakes_intro:{
     de:"Jede Füllung so, wie sie im Anschnitt aussieht. Die Farbleiste neben dem Namen zeigt, woraus die Torte besteht.",
@@ -514,7 +502,6 @@ const CAKES = P.filter(p=>p.k==="cake"), SMALL = P.filter(p=>p.k!=="cake");
 /* ---- state ---- */
 const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 let lang = (()=>{const s=store.get("lc-lang");if(LANGS.includes(s))return s;const b=(navigator.language||"de").slice(0,2).toLowerCase();return LANGS.includes(b)?b:"de"})();
-let fam = "all";
 const $ = s=>document.querySelector(s);
 const t = k=>T[k][lang];
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -534,22 +521,6 @@ function renderLangs(){
   for(const id of ["langs","langs2"]){
     $("#"+id).innerHTML = LANGS.map(l=>`<button type="button" lang="${l}" data-lang="${l}" aria-pressed="${l===lang}">${LANG_LABEL[l]}</button>`).join("");
   }
-}
-function renderFilters(){
-  const fams=["all","choco","vanilla","berry","nut"];
-  $("#filters").setAttribute("aria-label",t("nav_cakes"));
-  $("#filters").innerHTML = fams.map(f=>{
-    const c = f==="all"?CAKES.length:CAKES.filter(p=>p.f.includes(f)).length;
-    return `<button type="button" data-fam="${f}" aria-pressed="${f===fam}">${esc(t(f))}<sup>${c}</sup></button>`;
-  }).join("");
-}
-function applyFilter(animate){
-  document.querySelectorAll("#cakeGrid .card").forEach(el=>{
-    const show = fam==="all" || el.dataset.f.split(" ").includes(fam);
-    el.hidden = !show;
-    el.classList.remove("enter");
-    if(animate && show){void el.offsetWidth;el.classList.add("enter")}
-  });
 }
 function renderSelect(){
   const sel=$("#fProduct"), v=sel.value;
@@ -571,14 +542,11 @@ function render(){
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-t]").forEach(el=>{el.textContent=t(el.dataset.t)});
   $("#h1").innerHTML = t("h1").map((s,i)=>`<span class="ln"><span style="--i:${i}">${esc(s)}</span></span>`).join("");
-  $("#tally").textContent = t("tally").replace("{a}",CAKES.length).replace("{b}",SMALL.length);
   $("#heroCap").textContent = t("hero_cap");
-  $("#cakesCount").textContent = CAKES.length;
-  $("#smallCount").textContent = SMALL.length;
   $("#cakeGrid").innerHTML = CAKES.map((p,i)=>card(p,i)).join("");
   $("#smallGrid").innerHTML = SMALL.map((p,i)=>card(p,i)).join("");
   $("#dlgClose").setAttribute("aria-label",t("close"));
-  renderLangs(); renderFilters(); applyFilter(false); renderSelect(); renderContacts();
+  renderLangs(); renderSelect(); renderContacts();
   if(current) fillDialog(current);
 }
 
@@ -610,8 +578,6 @@ $("#dlgOrder").addEventListener("click",()=>{
 document.addEventListener("click",e=>{
   const lb=e.target.closest("[data-lang]");
   if(lb){lang=lb.dataset.lang;store.set("lc-lang",lang);render();return}
-  const fb=e.target.closest("[data-fam]");
-  if(fb){fam=fb.dataset.fam;renderFilters();applyFilter(true);return}
   const ob=e.target.closest(".card-open");
   if(ob){openDialog(ob.dataset.id)}
 });
