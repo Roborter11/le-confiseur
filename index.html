@@ -563,8 +563,10 @@ const P = [
 const CAKES = P.filter(p=>p.k==="cake"), SMALL = P.filter(p=>p.k!=="cake");
 
 /* ---- state ---- */
-const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-let lang = (()=>{const s=store.get("lc-lang");if(LANGS.includes(s))return s;const b=(navigator.language||"de").slice(0,2).toLowerCase();return LANGS.includes(b)?b:"de"})();
+/* every visit opens in German; a language picked by hand is kept only for this visit (tab) */
+const store = {get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}}};
+try{localStorage.removeItem("lc-lang")}catch(e){}
+let lang = (()=>{const s=store.get("lc-lang");return LANGS.includes(s)?s:"de"})();
 const $ = s=>document.querySelector(s);
 const t = k=>T[k][lang];
 const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
